@@ -15,3 +15,8 @@ F:\Users\David\Documents\GitHub\SoundStage\SoundStage\obj\Debug\SoundStage.cspro
 F:\Users\David\Documents\GitHub\SoundStage\SoundStage\obj\Debug\SoundStage.exe
 F:\Users\David\Documents\GitHub\SoundStage\SoundStage\obj\Debug\SoundStage.pdb
 F:\Users\David\Documents\GitHub\SoundStage\SoundStage\obj\Debug\GeneratedInternalTypeHelper.g.cs
+F:\Users\David\Documents\GitHub\SoundStage\SoundStage\bin\Debug\EntityFramework.dll
+F:\Users\David\Documents\GitHub\SoundStage\SoundStage\bin\Debug\EntityFramework.SqlServer.dll
+F:\Users\David\Documents\GitHub\SoundStage\SoundStage\bin\Debug\EntityFramework.xml
+F:\Users\David\Documents\GitHub\SoundStage\SoundStage\bin\Debug\EntityFramework.SqlServer.xml
+F:\Users\David\Documents\GitHub\SoundStage\SoundStage\obj\Debug\SoundStage.csproj.CopyComplete

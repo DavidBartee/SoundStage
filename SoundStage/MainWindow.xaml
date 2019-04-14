@@ -6,20 +6,18 @@
         xmlns:local="clr-namespace:SoundStage"
         mc:Ignorable="d"
         Title="SoundStage" Height="450" Width="800" Background="Black" Foreground="#FF00E8FF">
-	<Grid>
-		<Grid.ColumnDefinitions>
-			<ColumnDefinition/>
-			<ColumnDefinition/>
-			<ColumnDefinition/>
-		</Grid.ColumnDefinitions>
-		<Grid.RowDefinitions>
-			<RowDefinition/>
-			<RowDefinition/>
-		</Grid.RowDefinitions>
-		<Button Content="Add Sound" Grid.Column="2" HorizontalAlignment="Center" Margin="0,34,0,141" VerticalAlignment="Center" Width="102" Height="35"/>
-		<ListBox Grid.Column="2" HorizontalAlignment="Center" Height="311" Margin="50,0,50,12" VerticalAlignment="Bottom" Width="164" Grid.RowSpan="2">
-			
-		</ListBox>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="78*"/>
+            <RowDefinition Height="341*"/>
+        </Grid.RowDefinitions>
+        <Button x:Name="btnAddSound" Content="Add Sound" Grid.Column="2" HorizontalAlignment="Center" Margin="0" VerticalAlignment="Center" Width="102" Height="36"/>
+        <ListBox x:Name="listBoxSounds" Grid.Column="2" HorizontalAlignment="Center" Height="311" Margin="50,0,50,12" VerticalAlignment="Bottom" Width="164" Grid.Row="1" Drop="listBoxSounds_Drop" AllowDrop="True"/>
 
-	</Grid>
+    </Grid>
 </Window>
