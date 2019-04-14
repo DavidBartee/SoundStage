@@ -1,0 +1,17 @@
+F:\Users\David\Documents\GitHub\SoundStage\SoundStage\bin\Debug\SoundStage.exe.config
+F:\Users\David\Documents\GitHub\SoundStage\SoundStage\bin\Debug\SoundStage.exe
+F:\Users\David\Documents\GitHub\SoundStage\SoundStage\bin\Debug\SoundStage.pdb
+F:\Users\David\Documents\GitHub\SoundStage\SoundStage\obj\Debug\SoundStage.csprojResolveAssemblyReference.cache
+F:\Users\David\Documents\GitHub\SoundStage\SoundStage\obj\Debug\MainWindow.g.cs
+F:\Users\David\Documents\GitHub\SoundStage\SoundStage\obj\Debug\App.g.cs
+F:\Users\David\Documents\GitHub\SoundStage\SoundStage\obj\Debug\SoundStage_MarkupCompile.cache
+F:\Users\David\Documents\GitHub\SoundStage\SoundStage\obj\Debug\SoundStage_MarkupCompile.lref
+F:\Users\David\Documents\GitHub\SoundStage\SoundStage\obj\Debug\App.baml
+F:\Users\David\Documents\GitHub\SoundStage\SoundStage\obj\Debug\MainWindow.baml
+F:\Users\David\Documents\GitHub\SoundStage\SoundStage\obj\Debug\SoundStage.g.resources
+F:\Users\David\Documents\GitHub\SoundStage\SoundStage\obj\Debug\SoundStage.Properties.Resources.resources
+F:\Users\David\Documents\GitHub\SoundStage\SoundStage\obj\Debug\SoundStage.csproj.GenerateResource.cache
+F:\Users\David\Documents\GitHub\SoundStage\SoundStage\obj\Debug\SoundStage.csproj.CoreCompileInputs.cache
+F:\Users\David\Documents\GitHub\SoundStage\SoundStage\obj\Debug\SoundStage.exe
+F:\Users\David\Documents\GitHub\SoundStage\SoundStage\obj\Debug\SoundStage.pdb
+F:\Users\David\Documents\GitHub\SoundStage\SoundStage\obj\Debug\GeneratedInternalTypeHelper.g.cs
