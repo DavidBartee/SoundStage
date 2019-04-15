@@ -69,7 +69,8 @@ namespace SoundStage
         }
 
         public void PlaySound(string filePath) {
-
+            FileStream fs = new FileStream(filePath, FileMode.Open);
+            int numBytes = 4;
             SoundPlayer player = new SoundPlayer(filePath);
             player.Play();
             //Task.Factory.StartNew(() => { player.Play(); });
