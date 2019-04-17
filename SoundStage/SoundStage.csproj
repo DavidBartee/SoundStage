@@ -66,6 +66,7 @@
     <Compile Include="BUTTONBIND.cs" />
     <Compile Include="KEYBIND.cs" />
     <Compile Include="SOUND.cs" />
+    <Compile Include="SoundManager.cs" />
     <Compile Include="SoundStageDataModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

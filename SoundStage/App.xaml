@@ -29,11 +29,14 @@
 			</Setter>
 			<Style.Triggers>
 				<Trigger Property="IsMouseOver" Value="True">
-					<Setter Property="Background" Value="#7F01FFFF"/>
-					
-				</Trigger>
+                    <Setter Property="Background" Value="#7F01FFFF"/>
+                </Trigger>
 			</Style.Triggers>
 		</Style>
+        <Style TargetType="ListBox">
+            <Setter Property="Background" Value="Black"/>
+            <Setter Property="BorderBrush" Value="Aqua"/>
+        </Style>
 		<!--<Style TargetType="TabControl">
 			<Setter Property="Foreground" Value="Aqua"/>
 			<Setter Property="Background" Value="Black"/>

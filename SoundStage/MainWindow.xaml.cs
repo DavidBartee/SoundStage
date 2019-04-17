@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -20,6 +21,7 @@ namespace SoundStage
     public partial class MainWindow : Window
     {
         SoundStageDataModel soundData = new SoundStageDataModel();
+        SoundManager soundManager = new SoundManager();
 
         public MainWindow()
         {
@@ -69,11 +71,20 @@ namespace SoundStage
         }
 
         public void PlaySound(string filePath) {
-            FileStream fs = new FileStream(filePath, FileMode.Open);
+            FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             int numBytes = 4;
-            SoundPlayer player = new SoundPlayer(filePath);
-            player.Play();
-            //Task.Factory.StartNew(() => { player.Play(); });
+            string hexBytes = "";
+            for (int i = 0; i < numBytes; i++) {
+                hexBytes += string.Format($"{fs.ReadByte():X2}");
+            }
+            if (hexBytes.Substring(0, 8) == "52494646") {
+                SoundPlayer player = new SoundPlayer(filePath);
+                player.Play();
+            } else if (hexBytes.Substring(0, 6) == "494433") {
+                MediaPlayer mp = new MediaPlayer();
+                mp.Open(new Uri(filePath));
+                mp.Play();
+            }
         }
 
         private void listBoxSounds_Drop(object sender, DragEventArgs e)
@@ -87,6 +98,18 @@ namespace SoundStage
                         AddSound(s, false, false);
                     }
                 }
+            }
+        }
+
+        private void btnAddSound_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            string pathToSend = "";
+            if (dialog.ShowDialog() == true) {
+                pathToSend = dialog.FileName;
+            }
+            if (File.Exists(pathToSend)) {
+                AddSound(pathToSend, false, false);
             }
         }
     }
