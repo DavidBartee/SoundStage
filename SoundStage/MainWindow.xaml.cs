@@ -33,10 +33,10 @@ namespace SoundStage
             var sounds = from s in soundData.SOUNDs
                          select s.filePath;
             var soundList = sounds.ToList();
+
+            listBoxSounds.Items.Clear();
+
             foreach (string snd in soundList) {
-                /*ListBoxItem newItem = new ListBoxItem();
-                newItem.Content = snd;
-                listBoxSounds.Items.Add(newItem);*/
                 AddSound(snd, false, true);
             }
         }
@@ -58,6 +58,18 @@ namespace SoundStage
                 ListBoxItem newItem = new ListBoxItem();
                 newItem.Content = soundName;
                 newItem.MouseDoubleClick += (sender, e) => listItem_MouseDoubleClick(sender, e, filePath);
+
+                ContextMenu listMenu = new ContextMenu();
+                listMenu.Name = soundName.Substring(0, soundName.Length - 1 - soundName.LastIndexOf(".")) + "menu";
+                
+
+                MenuItem delete = new MenuItem();
+                delete.Header = "Delete";
+                delete.IsCheckable = false;
+                delete.Click += (sender, e) => listItem_Delete(sender, e, filePath);
+                listMenu.Items.Add(delete);
+
+                newItem.ContextMenu = listMenu;
                 listBoxSounds.Items.Add(newItem);
             }
         }
@@ -70,21 +82,17 @@ namespace SoundStage
             PlaySound(filePath);
         }
 
+        void listItem_Delete(object sender, RoutedEventArgs e, string filePath) {
+            SOUND soundToRemove = (from s in soundData.SOUNDs
+                         where s.filePath == filePath
+                         select s).First();
+            soundData.SOUNDs.Remove(soundToRemove);
+            soundData.SaveChanges();
+            RefreshSoundList();
+        }
+
         public void PlaySound(string filePath) {
-            FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            int numBytes = 4;
-            string hexBytes = "";
-            for (int i = 0; i < numBytes; i++) {
-                hexBytes += string.Format($"{fs.ReadByte():X2}");
-            }
-            if (hexBytes.Substring(0, 8) == "52494646") {
-                SoundPlayer player = new SoundPlayer(filePath);
-                player.Play();
-            } else if (hexBytes.Substring(0, 6) == "494433") {
-                MediaPlayer mp = new MediaPlayer();
-                mp.Open(new Uri(filePath));
-                mp.Play();
-            }
+            soundManager.PlaySound(filePath);
         }
 
         private void listBoxSounds_Drop(object sender, DragEventArgs e)

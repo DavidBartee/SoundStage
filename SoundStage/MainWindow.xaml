@@ -16,8 +16,16 @@
             <RowDefinition Height="78*"/>
             <RowDefinition Height="341*"/>
         </Grid.RowDefinitions>
-        <Button x:Name="btnAddSound" Content="Add Sound" Grid.Column="2" HorizontalAlignment="Center" Margin="0" VerticalAlignment="Center" Width="102" Height="36" Click="btnAddSound_Click"/>
-        <ListBox x:Name="listBoxSounds" Grid.Column="2" HorizontalAlignment="Center" Height="311" Margin="0" VerticalAlignment="Center" Width="164" Grid.Row="1" Drop="listBoxSounds_Drop" AllowDrop="True"/>
+        <ListBox x:Name="listBoxSounds" Drop="listBoxSounds_Drop" AllowDrop="True" MinHeight="100" Grid.Row="1"/>
+            <Button x:Name="btnAddSound" Content="Add Sound" HorizontalAlignment="Center" Margin="0" VerticalAlignment="Center" Width="102" Height="36" Click="btnAddSound_Click"/>
+        <TabControl Margin="0" Grid.RowSpan="2" Grid.ColumnSpan="2" Grid.Column="1">
+            <TabItem Header="Key Bindings">
+                <Grid/>
+            </TabItem>
+            <TabItem Header="Buttons">
+                <Grid/>
+            </TabItem>
+        </TabControl>
 
     </Grid>
 </Window>
