@@ -75,7 +75,6 @@ namespace SoundStage
         }
 
         void listItem_MouseDoubleClick(object sender, MouseButtonEventArgs e, string filePath) {
-            //DependencyObject de = (DependencyObject)e.OriginalSource;
             if (sender == null || !(sender is ListBoxItem))
                 return;
             ListBoxItem item = (ListBoxItem)sender;
@@ -119,6 +118,11 @@ namespace SoundStage
             if (File.Exists(pathToSend)) {
                 AddSound(pathToSend, false, false);
             }
+        }
+
+        private void btnNewBinding_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

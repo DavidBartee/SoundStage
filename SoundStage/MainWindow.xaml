@@ -17,15 +17,23 @@
             <RowDefinition Height="341*"/>
         </Grid.RowDefinitions>
         <ListBox x:Name="listBoxSounds" Drop="listBoxSounds_Drop" AllowDrop="True" MinHeight="100" Grid.Row="1"/>
-            <Button x:Name="btnAddSound" Content="Add Sound" HorizontalAlignment="Center" Margin="0" VerticalAlignment="Center" Width="102" Height="36" Click="btnAddSound_Click"/>
         <TabControl Margin="0" Grid.RowSpan="2" Grid.ColumnSpan="2" Grid.Column="1">
             <TabItem Header="Key Bindings">
-                <Grid/>
+                <Grid>
+                    <ListBox x:Name="listBoxKeyBinds" HorizontalAlignment="Left" Height="371" Margin="10,10,0,0" VerticalAlignment="Top" Width="504">
+                        <ListBoxItem Foreground="Cyan"/>
+                    </ListBox>
+                </Grid>
             </TabItem>
             <TabItem Header="Buttons">
                 <Grid/>
             </TabItem>
+            <TabItem Header="Music Player"></TabItem>
         </TabControl>
+        <StackPanel HorizontalAlignment="Center" Height="58" Margin="0" VerticalAlignment="Center" Width="244" Orientation="Horizontal">
+            <Button x:Name="btnAddSound" Content="Add Sound" HorizontalAlignment="Center" Margin="0" VerticalAlignment="Center" Width="102" Height="36" Click="btnAddSound_Click" VerticalContentAlignment="Center"/>
+            <Button x:Name="btnNewBinding" Content="New Binding" HorizontalAlignment="Center" Margin="0" VerticalAlignment="Center" Width="102" Height="36" VerticalContentAlignment="Center" Click="btnNewBinding_Click"/>
+        </StackPanel>
 
     </Grid>
 </Window>
