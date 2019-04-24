@@ -65,6 +65,10 @@
     </ApplicationDefinition>
     <Compile Include="BUTTONBIND.cs" />
     <Compile Include="KEYBIND.cs" />
+    <Compile Include="KeyBindListing.cs" />
+    <Compile Include="NewBindingWindow.xaml.cs">
+      <DependentUpon>NewBindingWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SOUND.cs" />
     <Compile Include="SoundManager.cs" />
     <Compile Include="SoundStageDataModel.cs" />
@@ -80,6 +84,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="NewBindingWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">

@@ -20,9 +20,15 @@
         <TabControl Margin="0" Grid.RowSpan="2" Grid.ColumnSpan="2" Grid.Column="1">
             <TabItem Header="Key Bindings">
                 <Grid>
-                    <ListBox x:Name="listBoxKeyBinds" HorizontalAlignment="Left" Height="371" Margin="10,10,0,0" VerticalAlignment="Top" Width="504">
-                        <ListBoxItem Foreground="Cyan"/>
-                    </ListBox>
+                    <ListView x:Name="listViewKeyBinds" VerticalContentAlignment="Center">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="BindID" Width="50" DisplayMemberBinding="{Binding KeyBindID}"/>
+                                <GridViewColumn Header="Keys" Width="200" DisplayMemberBinding="{Binding Keys}"/>
+                                <GridViewColumn Header="Sound" Width="200" DisplayMemberBinding="{Binding Sound}"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
                 </Grid>
             </TabItem>
             <TabItem Header="Buttons">

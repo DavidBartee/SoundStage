@@ -16,17 +16,15 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace SoundStage
-{
-    public partial class MainWindow : Window
-    {
+namespace SoundStage {
+    public partial class MainWindow : Window {
         SoundStageDataModel soundData = new SoundStageDataModel();
         SoundManager soundManager = new SoundManager();
 
-        public MainWindow()
-        {
+        public MainWindow() {
             InitializeComponent();
             RefreshSoundList();
+            RefreshKeyBindList();
         }
 
         public void RefreshSoundList() {
@@ -41,8 +39,21 @@ namespace SoundStage
             }
         }
 
-        public void AddSound(string filePath, bool doBackup, bool isInitialLoad)
-        {
+        public void RefreshKeyBindList() {
+            listViewKeyBinds.Items.Clear();
+            listViewKeyBinds.Items.Add(new KeyBindListing() { KeyBindID = 0, Keys = "Alt+Shift+S", Sound = "Stop all sounds"});
+
+            var keybinds = from b in soundData.KEYBINDS
+                           join sound in soundData.SOUNDs on b.soundID equals sound.soundID
+                           select new { KeyBindID = b.bindID, Keys = b.keys, Sound = sound.name };
+            var bindlist = keybinds.ToList();
+
+            foreach (var k in bindlist) {
+                listViewKeyBinds.Items.Add(k);
+            }
+        }
+
+        public void AddSound(string filePath, bool doBackup, bool isInitialLoad) {
             if (File.Exists(filePath)) {
                 int startAt = filePath.LastIndexOf("\\") + 1;
                 string soundName = filePath.Substring(startAt, filePath.Length - startAt);
@@ -61,7 +72,7 @@ namespace SoundStage
 
                 ContextMenu listMenu = new ContextMenu();
                 listMenu.Name = soundName.Substring(0, soundName.Length - 1 - soundName.LastIndexOf(".")) + "menu";
-                
+
 
                 MenuItem delete = new MenuItem();
                 delete.Header = "Delete";
@@ -83,8 +94,8 @@ namespace SoundStage
 
         void listItem_Delete(object sender, RoutedEventArgs e, string filePath) {
             SOUND soundToRemove = (from s in soundData.SOUNDs
-                         where s.filePath == filePath
-                         select s).First();
+                                   where s.filePath == filePath
+                                   select s).First();
             soundData.SOUNDs.Remove(soundToRemove);
             soundData.SaveChanges();
             RefreshSoundList();
@@ -94,8 +105,7 @@ namespace SoundStage
             soundManager.PlaySound(filePath);
         }
 
-        private void listBoxSounds_Drop(object sender, DragEventArgs e)
-        {
+        private void listBoxSounds_Drop(object sender, DragEventArgs e) {
             if (e.Data.GetDataPresent(DataFormats.FileDrop, true)) {
                 var fileNames = e.Data.GetData(DataFormats.FileDrop, true) as string[];
                 foreach (string s in fileNames) {
@@ -108,8 +118,7 @@ namespace SoundStage
             }
         }
 
-        private void btnAddSound_Click(object sender, RoutedEventArgs e)
-        {
+        private void btnAddSound_Click(object sender, RoutedEventArgs e) {
             OpenFileDialog dialog = new OpenFileDialog();
             string pathToSend = "";
             if (dialog.ShowDialog() == true) {
@@ -120,9 +129,10 @@ namespace SoundStage
             }
         }
 
-        private void btnNewBinding_Click(object sender, RoutedEventArgs e)
-        {
-
+        private void btnNewBinding_Click(object sender, RoutedEventArgs e) {
+            NewBindingWindow nbw = new NewBindingWindow();
+            nbw.Owner = this;
+            nbw.ShowDialog();
         }
     }
 }
