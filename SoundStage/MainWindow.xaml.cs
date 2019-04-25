@@ -133,6 +133,7 @@ namespace SoundStage {
             NewBindingWindow nbw = new NewBindingWindow();
             nbw.Owner = this;
             nbw.ShowDialog();
+            RefreshKeyBindList();
         }
     }
 }

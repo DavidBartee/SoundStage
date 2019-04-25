@@ -44,3 +44,5 @@ C:\Users\David\Documents\GitHub\SoundStage\SoundStage\obj\Debug\SoundStage.exe
 C:\Users\David\Documents\GitHub\SoundStage\SoundStage\obj\Debug\SoundStage.pdb
 F:\Users\David\Documents\GitHub\SoundStage\SoundStage\obj\Debug\NewBindingWindow.g.cs
 F:\Users\David\Documents\GitHub\SoundStage\SoundStage\obj\Debug\NewBindingWindow.baml
+C:\Users\David\Documents\GitHub\SoundStage\SoundStage\obj\Debug\NewBindingWindow.g.cs
+C:\Users\David\Documents\GitHub\SoundStage\SoundStage\obj\Debug\NewBindingWindow.baml

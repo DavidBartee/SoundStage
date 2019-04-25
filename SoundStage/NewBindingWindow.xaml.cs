@@ -125,7 +125,18 @@ namespace SoundStage {
                     newBind.soundID = foundID.First();
                     soundData.KEYBINDS.Add(newBind);
                 }
+            } else {
+                foreach (string s in soundsToBind) {
+                    BUTTONBIND newBtnBind = new BUTTONBIND();
+                    var foundID = from snd in soundData.SOUNDs
+                                  where snd.filePath == s
+                                  select snd.soundID;
+                    newBtnBind.soundID = foundID.First();
+                    soundData.BUTTONBINDS.Add(newBtnBind);
+                }
             }
+            soundData.SaveChanges();
+            DialogResult = true;
         }
     }
 }

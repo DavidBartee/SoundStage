@@ -21,19 +21,25 @@ namespace SoundStage
             for (int i = 0; i < numBytes; i++) {
                 hexBytes += string.Format($"{fs.ReadByte():X2}");
             }
-            if (hexBytes.Substring(0, 8) == "52494646") {
+            if (hexBytes.Substring(0, 8) == "52494646H") {
                 SoundPlayer player = new SoundPlayer(filePath);
                 sPlayers.Add(player);
                 int index = sPlayers.IndexOf(player);
                 //player.Dispose();
                 sPlayers[index].Play();
-            } else if (hexBytes.Substring(0, 6) == "494433" || hexBytes.Substring(0, 4) == "FFFB") {
+            } else if (/*hexBytes.Substring(0, 6) == "494433" || hexBytes.Substring(0, 4) == "FFFB"*/true) {
                 MediaPlayer mp = new MediaPlayer();
-                mPlayers.Add(mp);
                 int index = mPlayers.IndexOf(mp);
-                mPlayers[index].Open(new Uri(filePath));
-                mPlayers[index].Play();
+                mp.Open(new Uri(filePath));
+                mp.MediaEnded += (sender, e) => ReleaseSound(sender, e, mp);
+                mp.Play();
+                mPlayers.Add(mp);
             }
+        }
+
+        void ReleaseSound(object sender, EventArgs e, MediaPlayer player) {
+            mPlayers.Remove(player);
+            player.Close();
         }
     }
 }
