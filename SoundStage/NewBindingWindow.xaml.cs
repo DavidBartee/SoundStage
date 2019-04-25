@@ -115,7 +115,17 @@ namespace SoundStage {
         }
 
         private void btnCreateBinding_Click(object sender, RoutedEventArgs e) {
-
+            if (isKeyBinding) {
+                foreach (string s in soundsToBind) {
+                    KEYBIND newBind = new KEYBIND();
+                    newBind.keys = keysToBind.ToString();
+                    var foundID = from snd in soundData.SOUNDs
+                                  where snd.filePath == s
+                                  select snd.soundID;
+                    newBind.soundID = foundID.First();
+                    soundData.KEYBINDS.Add(newBind);
+                }
+            }
         }
     }
 }
