@@ -13,5 +13,18 @@ namespace SoundStage
     /// </summary>
     public partial class App : Application
     {
+        KeyboardListener KListener = new KeyboardListener();
+
+        private void Application_Startup(object sender, StartupEventArgs e) {
+            KListener.KeyDown += new RawKeyEventHandler(KListener_KeyDown);
+        }
+
+        private void KListener_KeyDown(object sender, RawKeyEventArgs args) {
+            //play sound here
+        }
+
+        private void Application_Exit(object sender, ExitEventArgs e) {
+            KListener.Dispose();
+        }
     }
 }
