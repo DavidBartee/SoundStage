@@ -15,15 +15,15 @@
             <RowDefinition Height="55*"/>
             <RowDefinition Height="321*"/>
         </Grid.RowDefinitions>
-        <ComboBox x:Name="comboBoxBindType" HorizontalAlignment="Left" Margin="102,14,0,0" VerticalAlignment="Top" Width="120" Height="22" SelectedIndex="0">
+        <ComboBox x:Name="comboBoxBindType" HorizontalAlignment="Left" Margin="102,14,0,0" VerticalAlignment="Top" Width="120" Height="22" SelectedIndex="0" SelectionChanged="comboBoxBindType_SelectionChanged">
             <ComboBoxItem Content="Keyboard"/>
             <ComboBoxItem Content="On-Screen Button"/>
         </ComboBox>
         <Label Content="Binding Type:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="26" Width="81"/>
-        <TextBox Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="52,14,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="170" IsReadOnly="True"/>
-        <Label Content="Keys:" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="26" Width="37"/>
-        <ListBox x:Name="listBoxChooseSound" HorizontalAlignment="Left" Height="251" Margin="10,10,0,0" Grid.Row="1" VerticalAlignment="Top" Width="444" Grid.ColumnSpan="2"/>
-        <Button x:Name="btnAddBinding" Content="Add Binding" Grid.Column="1" HorizontalAlignment="Left" Margin="114,275,0,0" Grid.Row="1" VerticalAlignment="Top" Width="108" Height="36"/>
+        <TextBox x:Name="textBoxBinding" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="52,14,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="170" IsReadOnly="True" PreviewKeyDown="textBoxBinding_PreviewKeyDown"/>
+        <Label x:Name="labelKeys" Content="Keys:" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="26" Width="37"/>
+        <ListBox x:Name="listBoxChooseSound" HorizontalAlignment="Left" Height="251" Margin="10,10,0,0" Grid.Row="1" VerticalAlignment="Top" Width="444" Grid.ColumnSpan="2" SelectionChanged="listBoxChooseSound_SelectionChanged" SelectionMode="Extended"/>
+        <Button x:Name="btnCreateBinding" Content="Create Binding" Grid.Column="1" HorizontalAlignment="Left" Margin="114,275,0,0" Grid.Row="1" VerticalAlignment="Top" Width="108" Height="36" Click="btnCreateBinding_Click"/>
 
     </Grid>
 </Window>

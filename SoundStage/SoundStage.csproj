@@ -66,6 +66,7 @@
     <Compile Include="BUTTONBIND.cs" />
     <Compile Include="KEYBIND.cs" />
     <Compile Include="KeyBindListing.cs" />
+    <Compile Include="KeyCombo.cs" />
     <Compile Include="NewBindingWindow.xaml.cs">
       <DependentUpon>NewBindingWindow.xaml</DependentUpon>
     </Compile>

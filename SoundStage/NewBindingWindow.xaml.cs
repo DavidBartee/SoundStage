@@ -20,6 +20,11 @@ namespace SoundStage {
     public partial class NewBindingWindow : Window {
 
         SoundStageDataModel soundData = new SoundStageDataModel();
+        Dictionary<ListBoxItem, string> soundsAvailable = new Dictionary<ListBoxItem, string>();
+        List<string> soundsToBind = new List<string>();
+        bool isKeyBinding = true;
+        KeyCombo keysToBind;
+
 
         public NewBindingWindow() {
             InitializeComponent();
@@ -39,8 +44,78 @@ namespace SoundStage {
                     newItem.Content = soundName;
                     //newItem.MouseDoubleClick += (sender, e) => listItem_MouseDoubleClick(sender, e, snd);
                     listBoxChooseSound.Items.Add(newItem);
+                    soundsAvailable.Add(newItem, snd);
                 }
             }
+            CheckIfReadyToBind();
+        }
+
+        void CheckIfReadyToBind() {
+            if ((keysToBind != null || isKeyBinding == false) && soundsToBind.Count > 0) {
+                btnCreateBinding.IsEnabled = true;
+                btnCreateBinding.Visibility = Visibility.Visible;
+            } else {
+                btnCreateBinding.IsEnabled = false;
+                btnCreateBinding.Visibility = Visibility.Hidden;
+            }
+        }
+
+        private void textBoxBinding_PreviewKeyDown(object sender, KeyEventArgs e) {
+            e.Handled = true;
+
+            ModifierKeys modifiers = Keyboard.Modifiers;
+            Key key = e.Key;
+
+            if (key == Key.System)
+                key = e.SystemKey;
+
+            if ((key == Key.Delete || key == Key.Back) && modifiers == ModifierKeys.None) {
+                textBoxBinding.Text = "";
+                keysToBind = null;
+                CheckIfReadyToBind();
+                return;
+            }
+            if (key == Key.RightCtrl || key == Key.LeftCtrl || key == Key.LeftShift || key == Key.RightShift
+                 || key == Key.LeftAlt || key == Key.RightAlt || key == Key.LWin || key == Key.RWin
+                  || key == Key.Clear || key == Key.OemClear || key == Key.Apps) {
+                return;
+            }
+
+            keysToBind = new KeyCombo(key, modifiers);
+            textBoxBinding.Text = keysToBind.ToString();
+            CheckIfReadyToBind();
+        }
+
+        private void listBoxChooseSound_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+            soundsToBind.Clear();
+            foreach (KeyValuePair<ListBoxItem, string> item in soundsAvailable) {
+                if (e.AddedItems.Contains(item.Key)) {
+                    soundsToBind.Add(item.Value);
+                }
+            }
+            CheckIfReadyToBind();
+        }
+
+        private void comboBoxBindType_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+            if (e.AddedItems[0] == null || textBoxBinding == null || labelKeys == null)
+                return;
+            if ((e.AddedItems[0] as ComboBoxItem).Content as string == "Keyboard") {
+                isKeyBinding = true;
+                textBoxBinding.Visibility = Visibility.Visible;
+                labelKeys.Visibility = Visibility.Visible;
+            }
+            if ((e.AddedItems[0] as ComboBoxItem).Content as string == "On-Screen Button") {
+                isKeyBinding = false;
+                keysToBind = null;
+                textBoxBinding.Text = "";
+                textBoxBinding.Visibility = Visibility.Hidden;
+                labelKeys.Visibility = Visibility.Hidden;
+            }
+            CheckIfReadyToBind();
+        }
+
+        private void btnCreateBinding_Click(object sender, RoutedEventArgs e) {
+
         }
     }
 }
