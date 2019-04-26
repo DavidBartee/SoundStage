@@ -17,41 +17,30 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using static SoundStage.KeyboardHook;
+using System.Windows.Forms;
 
 namespace SoundStage {
     public partial class MainWindow : Window {
-        #region HOTKEY_MANAGEMENT
-        [DllImport("user32.dll")]
-        public static extern bool RegisterHotKey(IntPtr hWnd, int id, int fsModifiers, int vlc);
-        [DllImport("user32.dll")]
-        public static extern bool UnregisterHotKey(IntPtr hWnd, int id);
 
-        const int WM_HOTKEY = 0x0312;
-        const int MYACTION_HOTKEY_ID = 1;
-
-        private void OnSourceInitialized(object sender, EventArgs e) {
-            HwndSource source = PresentationSource.FromVisual(this) as HwndSource;
-            source.AddHook(WndProc);
-        }
-
-        private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled) {
-            if (msg == WM_HOTKEY && wParam.ToInt32() == MYACTION_HOTKEY_ID) {
-                var find = from s in soundData.SOUNDs
-                           select s.filePath;
-                PlaySound(find.First());
-            }
-
-            return IntPtr.Zero;
-        }
-        #endregion
         SoundStageDataModel soundData = new SoundStageDataModel();
         SoundManager soundManager = new SoundManager();
+        private KeyboardHook _hook;
 
         public MainWindow() {
             InitializeComponent();
             RefreshSoundList();
             RefreshKeyBindList();
-            RegisterHotKey(new WindowInteropHelper(this).Handle, MYACTION_HOTKEY_ID, 0, 0x7B);
+            _hook = new KeyboardHook();
+            _hook.KeyDown += new KeyboardHook.HookEventHandler(OnHookKeyDown);
+        }
+
+        void OnHookKeyDown(object sender, HookEventArgs e) {
+            if (e.Key == Keys.D9) {
+                var found = from s in soundData.SOUNDs
+                            select s.filePath;
+                PlaySound(found.First());
+            }
         }
 
         public void RefreshSoundList() {
@@ -68,7 +57,7 @@ namespace SoundStage {
 
         public void RefreshKeyBindList() {
             listViewKeyBinds.Items.Clear();
-            listViewKeyBinds.Items.Add(new KeyBindListing() { KeyBindID = 0, Keys = "Alt+Shift+S", Sound = "Stop all sounds"});
+            listViewKeyBinds.Items.Add(new KeyBindListing() { KeyBindID = 0, Keys = "Alt+Shift+S", Sound = "Stop all sounds" });
 
             var keybinds = from b in soundData.KEYBINDS
                            join sound in soundData.SOUNDs on b.soundID equals sound.soundID
@@ -97,11 +86,11 @@ namespace SoundStage {
                 newItem.Content = soundName;
                 newItem.MouseDoubleClick += (sender, e) => listItem_MouseDoubleClick(sender, e, filePath);
 
-                ContextMenu listMenu = new ContextMenu();
+                System.Windows.Controls.ContextMenu listMenu = new System.Windows.Controls.ContextMenu();
                 listMenu.Name = soundName.Substring(0, soundName.Length - 1 - soundName.LastIndexOf(".")) + "menu";
 
 
-                MenuItem delete = new MenuItem();
+                System.Windows.Controls.MenuItem delete = new System.Windows.Controls.MenuItem();
                 delete.Header = "Delete";
                 delete.IsCheckable = false;
                 delete.Click += (sender, e) => listItem_Delete(sender, e, filePath);
@@ -132,9 +121,9 @@ namespace SoundStage {
             soundManager.PlaySound(filePath);
         }
 
-        private void listBoxSounds_Drop(object sender, DragEventArgs e) {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop, true)) {
-                var fileNames = e.Data.GetData(DataFormats.FileDrop, true) as string[];
+        private void listBoxSounds_Drop(object sender, System.Windows.DragEventArgs e) {
+            if (e.Data.GetDataPresent(System.Windows.DataFormats.FileDrop, true)) {
+                var fileNames = e.Data.GetData(System.Windows.DataFormats.FileDrop, true) as string[];
                 foreach (string s in fileNames) {
                     if (!File.Exists(s)) {
                         return;
@@ -146,7 +135,7 @@ namespace SoundStage {
         }
 
         private void btnAddSound_Click(object sender, RoutedEventArgs e) {
-            OpenFileDialog dialog = new OpenFileDialog();
+            Microsoft.Win32.OpenFileDialog dialog = new Microsoft.Win32.OpenFileDialog();
             string pathToSend = "";
             if (dialog.ShowDialog() == true) {
                 pathToSend = dialog.FileName;

@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
+using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -60,7 +61,7 @@ namespace SoundStage {
             }
         }
 
-        private void textBoxBinding_PreviewKeyDown(object sender, KeyEventArgs e) {
+        private void textBoxBinding_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e) {
             e.Handled = true;
 
             ModifierKeys modifiers = Keyboard.Modifiers;
@@ -81,7 +82,9 @@ namespace SoundStage {
                 return;
             }
 
-            keysToBind = new KeyCombo(key, modifiers);
+            keysToBind = new KeyCombo((Keys)KeyInterop.VirtualKeyFromKey(key), modifiers.HasFlag(ModifierKeys.Control) ? true : false,
+                modifiers.HasFlag(ModifierKeys.Alt) ? true : false,
+                modifiers.HasFlag(ModifierKeys.Shift) ? true : false);
             textBoxBinding.Text = keysToBind.ToString();
             CheckIfReadyToBind();
         }

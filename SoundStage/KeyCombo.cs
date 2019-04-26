@@ -3,29 +3,31 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Input;
+using System.Windows.Forms;
 
 namespace SoundStage {
     class KeyCombo {
-        public Key key { get; }
-        public ModifierKeys modifiers { get; }
+        public Keys key { get; }
+        public bool Control { get; }
+        public bool Alt { get; }
+        public bool Shift { get; }
 
-        public KeyCombo(Key k, ModifierKeys m) {
+        public KeyCombo(Keys k, bool ctrl, bool alt, bool shift) {
             key = k;
-            modifiers = m;
+            Control = ctrl;
+            Alt = alt;
+            Shift = shift;
         }
 
         public override string ToString() {
             StringBuilder sb = new StringBuilder();
 
-            if (modifiers.HasFlag(ModifierKeys.Control))
+            if (Control)
                 sb.Append("Ctrl + ");
-            if (modifiers.HasFlag(ModifierKeys.Alt))
+            if (Alt)
                 sb.Append("Alt + ");
-            if (modifiers.HasFlag(ModifierKeys.Shift))
+            if (Shift)
                 sb.Append("Shift + ");
-            if (modifiers.HasFlag(ModifierKeys.Windows))
-                sb.Append("Win + ");
 
             sb.Append(key);
             return sb.ToString();
