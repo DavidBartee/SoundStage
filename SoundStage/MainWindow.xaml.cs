@@ -21,11 +21,18 @@ using static SoundStage.KeyboardHook;
 using System.Windows.Forms;
 
 namespace SoundStage {
+
+    public class KeyBindWithSounds {
+        public KeyCombo keyCombo;
+        public List<string> sounds = new List<string>();
+    }
+
     public partial class MainWindow : Window {
 
         SoundStageDataModel soundData = new SoundStageDataModel();
         SoundManager soundManager = new SoundManager();
         private KeyboardHook _hook;
+        List<KeyBindWithSounds> allBinds = new List<KeyBindWithSounds>();
 
         public MainWindow() {
             InitializeComponent();
@@ -36,10 +43,17 @@ namespace SoundStage {
         }
 
         void OnHookKeyDown(object sender, HookEventArgs e) {
-            if (e.Key == Keys.D9) {
-                var found = from s in soundData.SOUNDs
-                            select s.filePath;
-                PlaySound(found.First());
+            KeyCombo hookedCombo = new KeyCombo(e.Key, e.Control, e.Alt, e.Shift);
+            if (hookedCombo.key == Keys.S && hookedCombo.Alt && hookedCombo.Shift && !hookedCombo.Control) {
+                soundManager.StopAllSounds();
+            } else {
+                foreach (KeyBindWithSounds bind in allBinds) {
+                    if (bind.keyCombo.Equals(hookedCombo)) {
+                        foreach (string sound in bind.sounds) {
+                            PlaySound(sound);
+                        }
+                    }
+                }
             }
         }
 
@@ -57,15 +71,31 @@ namespace SoundStage {
 
         public void RefreshKeyBindList() {
             listViewKeyBinds.Items.Clear();
-            listViewKeyBinds.Items.Add(new KeyBindListing() { KeyBindID = 0, Keys = "Alt+Shift+S", Sound = "Stop all sounds" });
+            listViewKeyBinds.Items.Add(new KeyBindListing() { KeyBindID = 0, Keys = "Alt + Shift + S", Sound = "Stop all sounds" });
 
             var keybinds = from b in soundData.KEYBINDS
                            join sound in soundData.SOUNDs on b.soundID equals sound.soundID
-                           select new { KeyBindID = b.bindID, Keys = b.keys, Sound = sound.name };
+                           select new { KeyBindID = b.bindID, Keys = b.keys, Sound = sound.name, sound.filePath };
             var bindlist = keybinds.ToList();
 
             foreach (var k in bindlist) {
+                KeyCombo keys = new KeyCombo(k.Keys);
+                int indexToEdit = -1;
                 listViewKeyBinds.Items.Add(k);
+                foreach (KeyBindWithSounds bind in allBinds) {
+                    if (bind.keyCombo == keys) {
+                        indexToEdit = allBinds.IndexOf(bind);
+                        break;
+                    }
+                }
+                if (indexToEdit == -1) {
+                    KeyBindWithSounds newBind = new KeyBindWithSounds();
+                    newBind.keyCombo = keys;
+                    newBind.sounds.Add(k.filePath);
+                    allBinds.Add(newBind);
+                } else if (!allBinds[indexToEdit].sounds.Contains(k.filePath)) {
+                    allBinds[indexToEdit].sounds.Add(k.filePath);
+                }
             }
         }
 

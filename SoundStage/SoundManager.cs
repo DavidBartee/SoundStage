@@ -12,7 +12,6 @@ namespace SoundStage
     class SoundManager
     {
         List<MediaPlayer> mPlayers = new List<MediaPlayer>();
-        List<SoundPlayer> sPlayers = new List<SoundPlayer>();
 
         public void PlaySound(string filePath) {
             FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
@@ -34,6 +33,17 @@ namespace SoundStage
         void ReleaseSound(object sender, EventArgs e, MediaPlayer player) {
             mPlayers.Remove(player);
             player.Close();
+        }
+
+        void CloseSound(MediaPlayer player) {
+            player.Close();
+        }
+
+        public void StopAllSounds() {
+            foreach (MediaPlayer player in mPlayers) {
+                CloseSound(player);
+            }
+            mPlayers.Clear();
         }
     }
 }
