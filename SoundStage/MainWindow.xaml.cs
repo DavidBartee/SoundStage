@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Media;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -11,6 +12,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
@@ -18,6 +20,30 @@ using System.Windows.Shapes;
 
 namespace SoundStage {
     public partial class MainWindow : Window {
+        #region HOTKEY_MANAGEMENT
+        [DllImport("user32.dll")]
+        public static extern bool RegisterHotKey(IntPtr hWnd, int id, int fsModifiers, int vlc);
+        [DllImport("user32.dll")]
+        public static extern bool UnregisterHotKey(IntPtr hWnd, int id);
+
+        const int WM_HOTKEY = 0x0312;
+        const int MYACTION_HOTKEY_ID = 1;
+
+        private void OnSourceInitialized(object sender, EventArgs e) {
+            HwndSource source = PresentationSource.FromVisual(this) as HwndSource;
+            source.AddHook(WndProc);
+        }
+
+        private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled) {
+            if (msg == WM_HOTKEY && wParam.ToInt32() == MYACTION_HOTKEY_ID) {
+                var find = from s in soundData.SOUNDs
+                           select s.filePath;
+                PlaySound(find.First());
+            }
+
+            return IntPtr.Zero;
+        }
+        #endregion
         SoundStageDataModel soundData = new SoundStageDataModel();
         SoundManager soundManager = new SoundManager();
 
@@ -25,6 +51,7 @@ namespace SoundStage {
             InitializeComponent();
             RefreshSoundList();
             RefreshKeyBindList();
+            RegisterHotKey(new WindowInteropHelper(this).Handle, MYACTION_HOTKEY_ID, 0, 0x7B);
         }
 
         public void RefreshSoundList() {

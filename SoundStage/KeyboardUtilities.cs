@@ -7,10 +7,12 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using static SoundStage.InterceptKeys;
 
 namespace SoundStage {
     public class KeyboardListener : IDisposable {
         private static IntPtr hookID = IntPtr.Zero;
+        private static LowLevelKeyboardProc llkp;
 
         [MethodImpl(MethodImplOptions.NoInlining)]
         private IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam) {
@@ -38,7 +40,7 @@ namespace SoundStage {
         public event RawKeyEventHandler KeyUp;
 
         public KeyboardListener() {
-            hookID = InterceptKeys.SetHook((InterceptKeys.LowLevelKeyboardProc)HookCallback);
+            hookID = SetHook(llkp);
         }
 
         ~KeyboardListener() {
