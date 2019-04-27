@@ -38,6 +38,7 @@ namespace SoundStage {
             InitializeComponent();
             RefreshSoundList();
             RefreshKeyBindList();
+            RefreshOnScreenButtons();
             _hook = new KeyboardHook();
             _hook.KeyDown += new KeyboardHook.HookEventHandler(OnHookKeyDown);
         }
@@ -99,6 +100,25 @@ namespace SoundStage {
             }
         }
 
+        public void RefreshOnScreenButtons() {
+            wrapPanelSoundButtons.Children.Clear();
+
+            var buttonBinds = from b in soundData.BUTTONBINDS
+                              join sound in soundData.SOUNDs on b.soundID equals sound.soundID
+                              select new { b.bindID, sound.filePath, sound.name };
+            var bindList = buttonBinds.ToList();
+
+            foreach (var bind in bindList) {
+                System.Windows.Controls.Button button = new System.Windows.Controls.Button();
+                button.Content = bind.name.Substring(0, bind.name.LastIndexOf("."));
+                button.Click += (sender, e) => ButtonPlaySound(sender, e, bind.filePath);
+                button.Margin = new Thickness(4.0);
+                button.Width = 200;
+                button.Height = 180;
+                wrapPanelSoundButtons.Children.Add(button);
+            }
+        }
+
         public void AddSound(string filePath, bool doBackup, bool isInitialLoad) {
             if (File.Exists(filePath)) {
                 int startAt = filePath.LastIndexOf("\\") + 1;
@@ -151,6 +171,10 @@ namespace SoundStage {
             soundManager.PlaySound(filePath);
         }
 
+        public void ButtonPlaySound(object sender, RoutedEventArgs e, string filePath) {
+            soundManager.PlaySound(filePath);
+        }
+
         private void listBoxSounds_Drop(object sender, System.Windows.DragEventArgs e) {
             if (e.Data.GetDataPresent(System.Windows.DataFormats.FileDrop, true)) {
                 var fileNames = e.Data.GetData(System.Windows.DataFormats.FileDrop, true) as string[];
@@ -180,6 +204,11 @@ namespace SoundStage {
             nbw.Owner = this;
             nbw.ShowDialog();
             RefreshKeyBindList();
+            RefreshOnScreenButtons();
+        }
+
+        private void btnStopSounds_Click(object sender, RoutedEventArgs e) {
+            soundManager.StopAllSounds();
         }
     }
 }

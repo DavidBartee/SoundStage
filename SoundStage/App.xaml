@@ -60,6 +60,14 @@
         <Style TargetType="Grid">
             <Setter Property="Background" Value="#00000000"/>
         </Style>
+        <Style TargetType="ScrollBar">
+            <Setter Property="Background" Value="Black"/>
+            <Setter Property="Foreground" Value="#6600FFFF"/>
+            <Setter Property="BorderBrush" Value="#6600FFFF"/>
+        </Style>
+        <Style TargetType="RepeatButton">
+            <Setter Property="Foreground" Value="Aqua"/>
+        </Style>
         <Style TargetType="TabControl">
 			<Setter Property="Foreground" Value="Aqua"/>
             <Setter Property="Background" Value="#00000000"/>

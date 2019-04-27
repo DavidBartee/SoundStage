@@ -70,7 +70,9 @@ namespace SoundStage {
             if (key == Key.System)
                 key = e.SystemKey;
 
-            if ((key == Key.Delete || key == Key.Back) && modifiers == ModifierKeys.None) {
+            if (((key == Key.Delete || key == Key.Back) && modifiers == ModifierKeys.None)
+                || key == Key.S && modifiers.HasFlag(ModifierKeys.Alt) && modifiers.HasFlag(ModifierKeys.Shift)
+                 && !modifiers.HasFlag(ModifierKeys.Control)) {
                 textBoxBinding.Text = "";
                 keysToBind = null;
                 CheckIfReadyToBind();
