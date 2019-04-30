@@ -9,5 +9,6 @@ namespace SoundStage {
         public int KeyBindID { get; set; }
         public string Keys { get; set; }
         public string Sound { get; set; }
+        public string filePath { get; set; }
     }
 }

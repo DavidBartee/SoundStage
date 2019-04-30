@@ -21,9 +21,14 @@
             <TabItem Header="Key Bindings">
                 <Grid>
                     <ListView x:Name="listViewKeyBinds" VerticalContentAlignment="Center">
+                        <ListView.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Edit" Click="keyBind_Edit"/>
+                                <MenuItem Header="Delete" Click="keyBind_Delete"/>
+                            </ContextMenu>
+                        </ListView.ContextMenu>
                         <ListView.View>
                             <GridView>
-                                <GridViewColumn Header="BindID" Width="50" DisplayMemberBinding="{Binding KeyBindID}"/>
                                 <GridViewColumn Header="Keys" Width="200" DisplayMemberBinding="{Binding Keys}"/>
                                 <GridViewColumn Header="Sound" Width="200" DisplayMemberBinding="{Binding Sound}"/>
                             </GridView>
@@ -36,7 +41,20 @@
                     <WrapPanel x:Name="wrapPanelSoundButtons" Margin="1" Orientation="Horizontal" ScrollViewer.CanContentScroll="True" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                 </ScrollViewer>
             </TabItem>
-            <TabItem Header="Music Player"></TabItem>
+            <TabItem Header="Music Player">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="107*"/>
+                        <RowDefinition Height="284*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="55*"/>
+                        <ColumnDefinition Width="207*"/>
+                    </Grid.ColumnDefinitions>
+                    <Canvas x:Name="canvasCurrentSong" Grid.Column="1" HorizontalAlignment="Left" Height="87" Margin="10,10,0,0" VerticalAlignment="Top" Width="394" RenderTransformOrigin="0,0"/>
+                    <ListBox x:Name="listBoxQueuedSounds" Grid.Column="1" HorizontalAlignment="Left" Height="264" Margin="10,10,0,0" VerticalAlignment="Top" Width="394" Grid.Row="1"/>
+                </Grid>
+            </TabItem>
         </TabControl>
         <StackPanel HorizontalAlignment="Center" Height="58" Margin="0" VerticalAlignment="Center" Width="244" Orientation="Horizontal">
             <Button x:Name="btnAddSound" Content="Add Sound" HorizontalAlignment="Center" Margin="0" VerticalAlignment="Center" Width="80" Height="36" Click="btnAddSound_Click" VerticalContentAlignment="Center"/>

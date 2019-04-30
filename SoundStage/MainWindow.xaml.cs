@@ -76,12 +76,13 @@ namespace SoundStage {
 
             var keybinds = from b in soundData.KEYBINDS
                            join sound in soundData.SOUNDs on b.soundID equals sound.soundID
-                           select new { KeyBindID = b.bindID, Keys = b.keys, Sound = sound.name, sound.filePath };
+                           select new KeyBindListing { KeyBindID = b.bindID, Keys = b.keys, Sound = sound.name, filePath = sound.filePath };
             var bindlist = keybinds.ToList();
 
             foreach (var k in bindlist) {
                 KeyCombo keys = new KeyCombo(k.Keys);
                 int indexToEdit = -1;
+
                 listViewKeyBinds.Items.Add(k);
                 foreach (KeyBindWithSounds bind in allBinds) {
                     if (bind.keyCombo == keys) {
@@ -112,6 +113,16 @@ namespace SoundStage {
                 System.Windows.Controls.Button button = new System.Windows.Controls.Button();
                 button.Content = bind.name.Substring(0, bind.name.LastIndexOf("."));
                 button.Click += (sender, e) => ButtonPlaySound(sender, e, bind.filePath);
+
+                System.Windows.Controls.ContextMenu buttonMenu = new System.Windows.Controls.ContextMenu();
+
+                System.Windows.Controls.MenuItem delete = new System.Windows.Controls.MenuItem();
+                delete.Header = "Delete";
+                delete.IsCheckable = false;
+                delete.Click += (sender, e) => soundButton_Delete(sender, e, bind.bindID);
+                buttonMenu.Items.Add(delete);
+                button.ContextMenu = buttonMenu;
+
                 button.Margin = new Thickness(4.0);
                 button.Width = 200;
                 button.Height = 180;
@@ -134,11 +145,11 @@ namespace SoundStage {
 
                 ListBoxItem newItem = new ListBoxItem();
                 newItem.Content = soundName;
+                
                 newItem.MouseDoubleClick += (sender, e) => listItem_MouseDoubleClick(sender, e, filePath);
 
                 System.Windows.Controls.ContextMenu listMenu = new System.Windows.Controls.ContextMenu();
                 listMenu.Name = soundName.Substring(0, soundName.Length - 1 - soundName.LastIndexOf(".")) + "menu";
-
 
                 System.Windows.Controls.MenuItem delete = new System.Windows.Controls.MenuItem();
                 delete.Header = "Delete";
@@ -165,6 +176,17 @@ namespace SoundStage {
             soundData.SOUNDs.Remove(soundToRemove);
             soundData.SaveChanges();
             RefreshSoundList();
+            RefreshKeyBindList();
+            RefreshOnScreenButtons();
+        }
+
+        void soundButton_Delete(object sender, RoutedEventArgs e, int bindID) {
+            BUTTONBIND bindToRemove = (from b in soundData.BUTTONBINDS
+                                   where b.bindID == bindID
+                                   select b).First();
+            soundData.BUTTONBINDS.Remove(bindToRemove);
+            soundData.SaveChanges();
+            RefreshOnScreenButtons();
         }
 
         public void PlaySound(string filePath) {
@@ -209,6 +231,24 @@ namespace SoundStage {
 
         private void btnStopSounds_Click(object sender, RoutedEventArgs e) {
             soundManager.StopAllSounds();
+        }
+
+        private void keyBind_Edit(object sender, RoutedEventArgs e) {
+            KeyBindListing itemToEdit = (KeyBindListing)listViewKeyBinds.SelectedItem;
+
+        }
+
+        private void keyBind_Delete(object sender, RoutedEventArgs e) {
+            KeyBindListing itemToDelete = (KeyBindListing)listViewKeyBinds.SelectedItem;
+            if (itemToDelete == null || listViewKeyBinds.SelectedIndex < 1) {
+                return;
+            }
+            KEYBIND bindToRemove = (from k in soundData.KEYBINDS
+                                   where k.bindID == itemToDelete.KeyBindID
+                                   select k).First();
+            soundData.KEYBINDS.Remove(bindToRemove);
+            soundData.SaveChanges();
+            RefreshKeyBindList();
         }
     }
 }
