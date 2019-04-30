@@ -19,12 +19,17 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using static SoundStage.KeyboardHook;
 using System.Windows.Forms;
+using System.Collections.Specialized;
 
 namespace SoundStage {
 
     public class KeyBindWithSounds {
         public KeyCombo keyCombo;
         public List<string> sounds = new List<string>();
+    }
+    public class ListedSoundWithID {
+        public ListBoxItem listItem;
+        public int soundID;
     }
 
     public partial class MainWindow : Window {
@@ -34,13 +39,28 @@ namespace SoundStage {
         private KeyboardHook _hook;
         List<KeyBindWithSounds> allBinds = new List<KeyBindWithSounds>();
 
+        Rectangle background;
+        Rectangle playHead;
+        Timer timerForCanvas = new Timer();
+
         public MainWindow() {
             InitializeComponent();
             RefreshSoundList();
             RefreshKeyBindList();
             RefreshOnScreenButtons();
+            soundManager.mediaList.CollectionChanged += MediaList_Changed;
             _hook = new KeyboardHook();
             _hook.KeyDown += new KeyboardHook.HookEventHandler(OnHookKeyDown);
+
+            background = new Rectangle();
+            background.RenderSize = canvasCurrentSong.RenderSize;
+            background.Stroke = Brushes.Indigo;
+            canvasCurrentSong.Children.Add(background);
+
+            playHead = new Rectangle();
+            playHead.RenderSize = new Size(4.0, canvasCurrentSong.Height);
+            playHead.Stroke = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
+            canvasCurrentSong.Children.Add(playHead);
         }
 
         void OnHookKeyDown(object sender, HookEventArgs e) {
@@ -58,20 +78,32 @@ namespace SoundStage {
             }
         }
 
+        void UpdateCanvas() {
+            background.RenderSize = canvasCurrentSong.RenderSize;
+
+            playHead.RenderSize = new Size(4.0, canvasCurrentSong.Height);
+            double playbackPosition = 0;
+            if (soundManager.currentMedia != null && soundManager.currentMedia.Source != null) {
+                playbackPosition = soundManager.currentMedia.Position.TotalSeconds / soundManager.currentMedia.NaturalDuration.TimeSpan.TotalSeconds;
+            }
+            playHead.RenderTransform = new TranslateTransform(playbackPosition, 0);
+        }
+
         public void RefreshSoundList() {
             var sounds = from s in soundData.SOUNDs
-                         select s.filePath;
+                         select s;
             var soundList = sounds.ToList();
 
             listBoxSounds.Items.Clear();
 
-            foreach (string snd in soundList) {
-                AddSound(snd, false, true);
+            foreach (SOUND snd in soundList) {
+                AddSound(snd.filePath, false, true, snd.soundID);
             }
         }
 
         public void RefreshKeyBindList() {
             listViewKeyBinds.Items.Clear();
+            allBinds.Clear();
             listViewKeyBinds.Items.Add(new KeyBindListing() { KeyBindID = 0, Keys = "Alt + Shift + S", Sound = "Stop all sounds" });
 
             var keybinds = from b in soundData.KEYBINDS
@@ -130,9 +162,33 @@ namespace SoundStage {
             }
         }
 
-        public void AddSound(string filePath, bool doBackup, bool isInitialLoad) {
+        public void RefreshMediaQueueList() {
+            listBoxQueuedSounds.Items.Clear();
+            foreach (MediaQueueItem item in soundManager.mediaList) {
+                ListBoxItem newItem = new ListBoxItem();
+                newItem.Content = item.name;
+
+                System.Windows.Controls.ContextMenu listMenu = new System.Windows.Controls.ContextMenu();
+
+                System.Windows.Controls.MenuItem delete = new System.Windows.Controls.MenuItem();
+                delete.Header = "Remove From Queue";
+                delete.IsCheckable = false;
+                delete.Click += (sender, e) => listItemQueuedSound_RemoveSound(sender, e, item);
+                listMenu.Items.Add(delete);
+
+                newItem.ContextMenu = listMenu;
+                listBoxQueuedSounds.Items.Add(newItem);
+            }
+            if (soundManager.isPlaying)
+                rectPausePlay.OpacityMask = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/SoundStage;component/images/pause.png")));
+            else
+                rectPausePlay.OpacityMask = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/SoundStage;component/images/play.png")));
+        }
+
+        public void AddSound(string filePath, bool doBackup, bool isInitialLoad, int soundID = -1) {
             if (File.Exists(filePath)) {
                 int startAt = filePath.LastIndexOf("\\") + 1;
+                int addedSoundID = soundID;
                 string soundName = filePath.Substring(startAt, filePath.Length - startAt);
                 if (!isInitialLoad) {
                     SOUND newSound = new SOUND();
@@ -141,27 +197,31 @@ namespace SoundStage {
                     newSound.name = soundName;
                     soundData.SOUNDs.Add(newSound);
                     soundData.SaveChanges();
+                    addedSoundID = (from s in soundData.SOUNDs
+                                    orderby s.soundID
+                                    select s.soundID).Last();
                 }
 
                 ListBoxItem newItem = new ListBoxItem();
                 newItem.Content = soundName;
-                
+
+                newItem.DataContext = addedSoundID;
                 newItem.MouseDoubleClick += (sender, e) => listItem_MouseDoubleClick(sender, e, filePath);
+                newItem.PreviewMouseMove += listBoxItemSound_PreviewMouseMoveEvent;
 
                 System.Windows.Controls.ContextMenu listMenu = new System.Windows.Controls.ContextMenu();
-                listMenu.Name = soundName.Substring(0, soundName.Length - 1 - soundName.LastIndexOf(".")) + "menu";
 
                 System.Windows.Controls.MenuItem delete = new System.Windows.Controls.MenuItem();
                 delete.Header = "Delete";
                 delete.IsCheckable = false;
-                delete.Click += (sender, e) => listItem_Delete(sender, e, filePath);
+                delete.Click += (sender, e) => listItem_Delete(sender, e, addedSoundID);
                 listMenu.Items.Add(delete);
 
                 newItem.ContextMenu = listMenu;
                 listBoxSounds.Items.Add(newItem);
             }
         }
-
+        #region Event Handlers
         void listItem_MouseDoubleClick(object sender, MouseButtonEventArgs e, string filePath) {
             if (sender == null || !(sender is ListBoxItem))
                 return;
@@ -169,9 +229,9 @@ namespace SoundStage {
             PlaySound(filePath);
         }
 
-        void listItem_Delete(object sender, RoutedEventArgs e, string filePath) {
+        void listItem_Delete(object sender, RoutedEventArgs e, int soundID) {
             SOUND soundToRemove = (from s in soundData.SOUNDs
-                                   where s.filePath == filePath
+                                   where s.soundID == soundID
                                    select s).First();
             soundData.SOUNDs.Remove(soundToRemove);
             soundData.SaveChanges();
@@ -249,6 +309,45 @@ namespace SoundStage {
             soundData.KEYBINDS.Remove(bindToRemove);
             soundData.SaveChanges();
             RefreshKeyBindList();
+        }
+
+        void listBoxItemSound_PreviewMouseMoveEvent(object sender, System.Windows.Input.MouseEventArgs e) {
+            if (e.LeftButton == MouseButtonState.Pressed && sender is ListBoxItem) {
+                ListBoxItem draggedItem = sender as ListBoxItem;
+                if (sender != null && e != null && draggedItem != null && draggedItem.DataContext != null) {
+                    DragDrop.DoDragDrop(draggedItem, draggedItem.DataContext, System.Windows.DragDropEffects.Copy);
+                    draggedItem.IsSelected = true;
+                }
+            }
+        }
+
+        private void listBoxQueuedSounds_Drop(object sender, System.Windows.DragEventArgs e) {
+            if (e.Data.GetFormats().Count() > 0) {
+                int searchID = (int)e.Data.GetData(typeof(int));
+                SOUND soundToAdd = (from s in soundData.SOUNDs
+                                   where s.soundID == searchID
+                                   select s).First();
+                soundManager.AddToMediaList(soundToAdd.name, soundToAdd.filePath);
+                RefreshMediaQueueList();
+            }
+        }
+
+        void listItemQueuedSound_RemoveSound(object sender, RoutedEventArgs e, MediaQueueItem item) {
+            soundManager.RemoveFromMediaList(item);
+            RefreshMediaQueueList();
+        }
+
+        private void MediaList_Changed(object sender, NotifyCollectionChangedEventArgs e) {
+            RefreshMediaQueueList();
+        }
+        #endregion
+
+        private void btnPausePlay_Click(object sender, RoutedEventArgs e) {
+            soundManager.PlayOrPauseQueue();
+            if (soundManager.isPlaying)
+                rectPausePlay.OpacityMask = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/SoundStage;component/images/pause.png")));
+            else
+                rectPausePlay.OpacityMask = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/SoundStage;component/images/play.png")));
         }
     }
 }

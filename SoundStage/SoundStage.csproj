@@ -69,6 +69,7 @@
     <Compile Include="KeyBindListing.cs" />
     <Compile Include="KeyboardHook.cs" />
     <Compile Include="KeyCombo.cs" />
+    <Compile Include="MediaQueueItem.cs" />
     <Compile Include="NewBindingWindow.xaml.cs">
       <DependentUpon>NewBindingWindow.xaml</DependentUpon>
     </Compile>
@@ -118,6 +119,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="images\pause.png" />
+    <Resource Include="images\play.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

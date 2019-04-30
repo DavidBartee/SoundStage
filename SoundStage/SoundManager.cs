@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Media;
@@ -7,12 +8,16 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 
-namespace SoundStage
-{
-    class SoundManager
-    {
+namespace SoundStage {
+    class SoundManager {
         List<MediaPlayer> mPlayers = new List<MediaPlayer>();
-        Queue<MediaPlayer> mediaQueue = new Queue<MediaPlayer>();
+        public ObservableCollection<MediaQueueItem> mediaList = new ObservableCollection<MediaQueueItem>();
+        public MediaPlayer currentMedia = new MediaPlayer();
+        public bool isPlaying = false;
+
+        public SoundManager() {
+            currentMedia.MediaEnded += CurrentMedia_MediaEnded;
+        }
 
         public void PlaySound(string filePath) {
             if (ValidateFile(filePath)) {
@@ -52,6 +57,52 @@ namespace SoundStage
                 CloseSound(player);
             }
             mPlayers.Clear();
+        }
+
+        public void AddToMediaList(string name, string filePath) {
+            mediaList.Add(new MediaQueueItem { name = name, filePath = filePath });
+        }
+
+        public void RemoveFromMediaList(MediaQueueItem item) {
+            if (mediaList.IndexOf(item) == 0) {
+                if (isPlaying) {
+                    currentMedia.Stop();
+                    if (mediaList.Count <= 1) {
+                        currentMedia.Close();
+                        isPlaying = false;
+                    }
+                }
+            }
+            mediaList.Remove(item);
+            if (mediaList.Count > 1) {
+                currentMedia.Open(new Uri(mediaList.First().filePath));
+                if (isPlaying)
+                    currentMedia.Play();
+            }
+        }
+
+        public void PlayOrPauseQueue() {
+            if (isPlaying) {
+                currentMedia.Pause();
+                isPlaying = false;
+            } else if (mediaList.Count > 0) {
+                if (currentMedia.Source == null) {
+                    currentMedia.Open(new Uri(mediaList.First().filePath));
+                    currentMedia.Play();
+                } else {
+                    currentMedia.Play();
+                }
+                isPlaying = true;
+            }
+        }
+
+        private void CurrentMedia_MediaEnded(object sender, EventArgs e) {
+            MediaQueueItem firstItem = mediaList.First();
+            mediaList.RemoveAt(0);
+            mediaList.Add(firstItem);
+            currentMedia.Close();
+            currentMedia.Open(new Uri(mediaList.First().filePath));
+            currentMedia.Play();
         }
     }
 }
