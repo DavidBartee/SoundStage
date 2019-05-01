@@ -52,15 +52,24 @@ namespace SoundStage {
             _hook = new KeyboardHook();
             _hook.KeyDown += new KeyboardHook.HookEventHandler(OnHookKeyDown);
 
+            canvasCurrentSong.Width = 394;
+            canvasCurrentSong.Height = 87;
+
             background = new Rectangle();
-            background.RenderSize = canvasCurrentSong.RenderSize;
-            background.Stroke = Brushes.Indigo;
+            background.Width = canvasCurrentSong.Width;
+            background.Height = canvasCurrentSong.Height;
+            background.Stroke = new SolidColorBrush(Color.FromArgb(255, 100, 0, 200));
             canvasCurrentSong.Children.Add(background);
 
             playHead = new Rectangle();
-            playHead.RenderSize = new Size(4.0, canvasCurrentSong.Height);
+            playHead.Width = 4.0;
+            playHead.Height = canvasCurrentSong.Height;
             playHead.Stroke = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
             canvasCurrentSong.Children.Add(playHead);
+
+            timerForCanvas.Interval = 4;
+            timerForCanvas.Tick += UpdateCanvas;
+            timerForCanvas.Start();
         }
 
         void OnHookKeyDown(object sender, HookEventArgs e) {
@@ -78,15 +87,12 @@ namespace SoundStage {
             }
         }
 
-        void UpdateCanvas() {
-            background.RenderSize = canvasCurrentSong.RenderSize;
-
-            playHead.RenderSize = new Size(4.0, canvasCurrentSong.Height);
+        void UpdateCanvas(object sender, EventArgs e) {
             double playbackPosition = 0;
-            if (soundManager.currentMedia != null && soundManager.currentMedia.Source != null) {
+            if (soundManager.currentMedia != null && soundManager.currentMedia.Source != null && soundManager.currentMedia.NaturalDuration.HasTimeSpan) {
                 playbackPosition = soundManager.currentMedia.Position.TotalSeconds / soundManager.currentMedia.NaturalDuration.TimeSpan.TotalSeconds;
             }
-            playHead.RenderTransform = new TranslateTransform(playbackPosition, 0);
+            Canvas.SetLeft(playHead, playbackPosition * canvasCurrentSong.Width);
         }
 
         public void RefreshSoundList() {
@@ -198,8 +204,8 @@ namespace SoundStage {
                     soundData.SOUNDs.Add(newSound);
                     soundData.SaveChanges();
                     addedSoundID = (from s in soundData.SOUNDs
-                                    orderby s.soundID
-                                    select s.soundID).Last();
+                                    orderby s.soundID descending
+                                    select s.soundID).First();
                 }
 
                 ListBoxItem newItem = new ListBoxItem();
@@ -295,7 +301,10 @@ namespace SoundStage {
 
         private void keyBind_Edit(object sender, RoutedEventArgs e) {
             KeyBindListing itemToEdit = (KeyBindListing)listViewKeyBinds.SelectedItem;
-
+            EditKeybind ekb = new EditKeybind(itemToEdit.KeyBindID, new KeyCombo(itemToEdit.Keys));
+            ekb.Owner = this;
+            ekb.ShowDialog();
+            RefreshKeyBindList();
         }
 
         private void keyBind_Delete(object sender, RoutedEventArgs e) {

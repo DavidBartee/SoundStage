@@ -51,7 +51,7 @@
                         <ColumnDefinition Width="110"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <Canvas x:Name="canvasCurrentSong" Grid.Column="1" HorizontalAlignment="Left" Height="87" Margin="10,10,0,0" VerticalAlignment="Top" Width="394" RenderTransformOrigin="0,0"/>
+                    <Canvas x:Name="canvasCurrentSong" Grid.Column="1" HorizontalAlignment="Left" Height="87" Margin="10" VerticalAlignment="Top" Width="394" RenderTransformOrigin="0,0"/>
                     <ListBox x:Name="listBoxQueuedSounds" Grid.Column="1" Margin="10" Grid.Row="1" AllowDrop="True" Drop="listBoxQueuedSounds_Drop"/>
                     <Button x:Name="btnPausePlay" Margin="10" ScrollViewer.VerticalScrollBarVisibility="Disabled" Background="Black" Click="btnPausePlay_Click">
                         <Rectangle x:Name="rectPausePlay" Margin="1" ScrollViewer.VerticalScrollBarVisibility="Disabled" Width="60" Height="60" Fill="Cyan" >

@@ -14,6 +14,10 @@
             <Setter Property="Background" Value="Black"/>
             <Setter Property="Foreground" Value="Aqua"/>
         </Style>
+        <Style TargetType="{x:Type local:EditKeybind}">
+            <Setter Property="Background" Value="Black"/>
+            <Setter Property="Foreground" Value="Aqua"/>
+        </Style>
         <Style TargetType="TextBlock">
 			<Setter Property="Foreground" Value="Aqua"/>
 			<Setter Property="Background" Value="#00000000"/>

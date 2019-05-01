@@ -65,6 +65,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="BUTTONBIND.cs" />
+    <Compile Include="EditKeybind.xaml.cs">
+      <DependentUpon>EditKeybind.xaml</DependentUpon>
+    </Compile>
     <Compile Include="KEYBIND.cs" />
     <Compile Include="KeyBindListing.cs" />
     <Compile Include="KeyboardHook.cs" />
@@ -76,6 +79,10 @@
     <Compile Include="SOUND.cs" />
     <Compile Include="SoundManager.cs" />
     <Compile Include="SoundStageDataModel.cs" />
+    <Page Include="EditKeybind.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
