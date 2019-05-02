@@ -192,7 +192,7 @@ namespace SoundStage {
         }
 
         public void AddSound(string filePath, bool doBackup, bool isInitialLoad, int soundID = -1) {
-            if (File.Exists(filePath)) {
+            if (File.Exists(filePath) && soundManager.ValidateFile(filePath)) {
                 int startAt = filePath.LastIndexOf("\\") + 1;
                 int addedSoundID = soundID;
                 string soundName = filePath.Substring(startAt, filePath.Length - startAt);

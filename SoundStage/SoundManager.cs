@@ -74,7 +74,7 @@ namespace SoundStage {
                 }
             }
             mediaList.Remove(item);
-            if (mediaList.Count > 1) {
+            if (mediaList.Count > 0) {
                 currentMedia.Open(new Uri(mediaList.First().filePath));
                 if (isPlaying)
                     currentMedia.Play();

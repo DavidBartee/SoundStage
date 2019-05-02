@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SoundStage"
         mc:Ignorable="d"
-        Title="Sound Stage" Height="450" Width="800" Background="Black" Foreground="#FF00E8FF">
+        Title="Sound Stage" Height="450" Width="800" Background="Black" Foreground="#FF00E8FF" Icon="images/Sound Stage icon.png">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="264"/>
