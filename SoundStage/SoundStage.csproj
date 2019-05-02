@@ -45,6 +45,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -64,9 +65,24 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="BUTTONBIND.cs" />
+    <Compile Include="EditKeybind.xaml.cs">
+      <DependentUpon>EditKeybind.xaml</DependentUpon>
+    </Compile>
     <Compile Include="KEYBIND.cs" />
+    <Compile Include="KeyBindListing.cs" />
+    <Compile Include="KeyboardHook.cs" />
+    <Compile Include="KeyCombo.cs" />
+    <Compile Include="MediaQueueItem.cs" />
+    <Compile Include="NewBindingWindow.xaml.cs">
+      <DependentUpon>NewBindingWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SOUND.cs" />
+    <Compile Include="SoundManager.cs" />
     <Compile Include="SoundStageDataModel.cs" />
+    <Page Include="EditKeybind.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -79,6 +95,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="NewBindingWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -106,6 +126,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\Sound Stage icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\pause.png" />
+    <Resource Include="images\play.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
