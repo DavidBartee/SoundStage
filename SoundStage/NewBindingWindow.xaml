@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SoundStage"
         mc:Ignorable="d"
-        Title="NewBindingWindow" Height="406.667" Width="472.222">
+        Title="NewBindingWindow" Height="406.667" Width="581.868">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
@@ -15,14 +15,14 @@
             <RowDefinition Height="55*"/>
             <RowDefinition Height="321*"/>
         </Grid.RowDefinitions>
-        <ComboBox x:Name="comboBoxBindType" HorizontalAlignment="Left" Margin="102,14,0,0" VerticalAlignment="Top" Width="120" Height="22" SelectedIndex="0" SelectionChanged="comboBoxBindType_SelectionChanged">
+        <ComboBox x:Name="comboBoxBindType" HorizontalAlignment="Left" Margin="116,14,0,0" VerticalAlignment="Top" Width="130" Height="22" SelectedIndex="0" SelectionChanged="comboBoxBindType_SelectionChanged">
             <ComboBoxItem Content="Keyboard"/>
             <ComboBoxItem Content="On-Screen Button"/>
         </ComboBox>
-        <Label Content="Binding Type:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="26" Width="81"/>
-        <TextBox x:Name="textBoxBinding" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="52,14,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="170" IsReadOnly="True" PreviewKeyDown="textBoxBinding_PreviewKeyDown"/>
-        <Label x:Name="labelKeys" Content="Keys:" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="26" Width="37"/>
-        <ListBox x:Name="listBoxChooseSound" HorizontalAlignment="Left" Height="251" Margin="10,10,0,0" Grid.Row="1" VerticalAlignment="Top" Width="444" Grid.ColumnSpan="2" SelectionChanged="listBoxChooseSound_SelectionChanged" SelectionMode="Extended"/>
+        <Label Content="Binding Type:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="35" Width="101"/>
+        <TextBox x:Name="textBoxBinding" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="67,14,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="170" IsReadOnly="True" PreviewKeyDown="textBoxBinding_PreviewKeyDown"/>
+        <Label x:Name="labelKeys" Content="Keys:" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="35" Width="52"/>
+        <ListBox x:Name="listBoxChooseSound" Height="251" Margin="10,10,0,0" Grid.Row="1" Width="554" Grid.ColumnSpan="2" SelectionChanged="listBoxChooseSound_SelectionChanged" SelectionMode="Extended" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         <Button x:Name="btnCreateBinding" Content="Create Binding" Grid.Column="1" HorizontalAlignment="Left" Margin="114,275,0,0" Grid.Row="1" VerticalAlignment="Top" Width="108" Height="36" Click="btnCreateBinding_Click"/>
 
     </Grid>

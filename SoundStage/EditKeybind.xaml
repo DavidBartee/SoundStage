@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SoundStage"
         mc:Ignorable="d"
-        Title="Edit Keybind" Height="137.778" Width="388.888">
+        Title="Edit Keybind" Height="137.778" Width="410.888">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -15,8 +15,8 @@
             <ColumnDefinition/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <Label Content="Please input a new KeyBind:" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center"/>
-        <TextBox x:Name="textBoxEditBinding" HorizontalAlignment="Left" Height="23" Margin="0" TextWrapping="Wrap" VerticalAlignment="Center" Width="170" IsReadOnly="True" PreviewKeyDown="textBoxEditBinding_PreviewKeyDown" Grid.Column="1"/>
+        <Label Content="Please input a new KeyBind:" HorizontalAlignment="Left" Margin="10,14,0,0" VerticalAlignment="Center" Width="192" Height="40"/>
+        <TextBox x:Name="textBoxEditBinding" HorizontalAlignment="Left" Height="24" Margin="10,16,0,14" TextWrapping="Wrap" VerticalAlignment="Center" Width="170" IsReadOnly="True" PreviewKeyDown="textBoxEditBinding_PreviewKeyDown" Grid.Column="1"/>
         <Button x:Name="btnConfirmKeybindEdit" Content="Okay" HorizontalAlignment="Center" Margin="0" VerticalAlignment="Center" Width="105" Height="39" Click="btnConfirmKeybindEdit_Click" Grid.Row="1" Grid.Column="1"/>
     </Grid>
 </Window>
